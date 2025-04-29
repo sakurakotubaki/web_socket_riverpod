@@ -6,7 +6,7 @@ part of 'main.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$webSocketChannelHash() => r'0e4a99811b7c15342ff637f47926dd59c2270c75';
+String _$webSocketChannelHash() => r'1016f39817b398a6c66b324407dc162f59cf561f';
 
 /// See also [webSocketChannel].
 @ProviderFor(webSocketChannel)
@@ -24,11 +24,11 @@ final webSocketChannelProvider = AutoDisposeProvider<WebSocketChannel>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef WebSocketChannelRef = AutoDisposeProviderRef<WebSocketChannel>;
-String _$webSocketStreamHash() => r'8252f605e914959195d2388c78ed2ed9d2d46695';
+String _$webSocketStreamHash() => r'7252561155e445bf6d57261987058d9fa8da7c90';
 
 /// See also [webSocketStream].
 @ProviderFor(webSocketStream)
-final webSocketStreamProvider = AutoDisposeStreamProvider<String>.internal(
+final webSocketStreamProvider = AutoDisposeStreamProvider<dynamic>.internal(
   webSocketStream,
   name: r'webSocketStreamProvider',
   debugGetCreateSourceHash:
@@ -41,21 +41,6 @@ final webSocketStreamProvider = AutoDisposeStreamProvider<String>.internal(
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef WebSocketStreamRef = AutoDisposeStreamProviderRef<String>;
-String _$messagesHash() => r'413dcad25b6517de5230e7f1f2ffdce157bdb3b7';
-
-/// See also [Messages].
-@ProviderFor(Messages)
-final messagesProvider =
-    AutoDisposeNotifierProvider<Messages, List<Message>>.internal(
-      Messages.new,
-      name: r'messagesProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product') ? null : _$messagesHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-typedef _$Messages = AutoDisposeNotifier<List<Message>>;
+typedef WebSocketStreamRef = AutoDisposeStreamProviderRef<dynamic>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
