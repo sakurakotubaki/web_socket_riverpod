@@ -81,11 +81,41 @@ class MyHomePage extends ConsumerWidget {
     );
 
     final messages = ref.watch(messagesProvider);
+    final webSocketState = ref.watch(webSocketStreamProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text(title)),
+      appBar: AppBar(
+        title: Text(title),
+        actions: [
+          switch(webSocketState) {
+            AsyncData(:final value) => ListView.builder(
+              itemCount: value.length,
+              itemBuilder: (context, index) {
+                final message = messages[index];
+                return MessageBubble(message: message);
+              },
+            ),
+            AsyncError(:final error) => Text('Error Code $error'),
+            _ => const CircularProgressIndicator(),
+          }
+        ],
+      ),
       body: Column(
         children: [
+          // WebSocket connection status
+          webSocketState.when(
+            data: (_) => Container(),
+            error: (error, stackTrace) => Container(
+              color: Colors.red.shade100,
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              width: double.infinity,
+              child: Text(
+                'WebSocket error: ${error.toString()}',
+                style: const TextStyle(color: Colors.red),
+              ),
+            ),
+            loading: () => const LinearProgressIndicator(),
+          ),
           // Messages list - takes most of the screen
           Expanded(
             child: ListView.builder(
@@ -169,6 +199,10 @@ class _MessageInputFieldState extends ConsumerState<MessageInputField> {
 
   @override
   Widget build(BuildContext context) {
+    // WebSocketの状態を監視して、接続が切れている場合は入力を無効化
+    final webSocketState = ref.watch(webSocketStreamProvider);
+    final bool isConnected = webSocketState is! AsyncError;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
@@ -188,18 +222,20 @@ class _MessageInputFieldState extends ConsumerState<MessageInputField> {
           Expanded(
             child: TextField(
               controller: _controller,
-              decoration: const InputDecoration(
-                hintText: 'Type a message',
-                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: InputDecoration(
+                hintText: isConnected ? 'Type a message' : 'WebSocket disconnected',
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 border: InputBorder.none,
               ),
               onSubmitted: (_) => _sendMessage(),
+              enabled: isConnected,
             ),
           ),
           // Send button
           IconButton(
             icon: const Icon(Icons.send),
-            onPressed: _sendMessage,
+            onPressed: isConnected ? _sendMessage : null,
+            color: isConnected ? Theme.of(context).primaryColor : Colors.grey,
           ),
         ],
       ),
